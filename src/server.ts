@@ -1,7 +1,9 @@
 import app from './app.js'
 
-const PORT = process.env.PORT || 5000
+import AppLog from './events/AppLog.js'
+
+const PORT = +process.env.PORT || 5000
 
 app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}.`)
+  AppLog('Server', `Server listening on port ${PORT}`)
 })
