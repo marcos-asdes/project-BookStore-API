@@ -1,13 +1,20 @@
 import { Request, Response, NextFunction } from 'express'
-import { Prisma } from '@prisma/client'
 
 import { AppError } from '../events/AppError.js'
 import AppLog from '../events/AppLog.js'
 
 import * as repository from '../repositories/auth.repository.js'
 
+/* interface userProperties {
+  id: number;
+  email: string;
+  name: string;
+  surname: string;
+  created_at: Date;
+} */
+
 async function checkIfDataIsAlreadyRegistered (_req: Request, res: Response, next: NextFunction) {
-  const body: Prisma.UserCreateInput = res.locals.body
+  const body = res.locals.body
   const { email } = body
 
   const data = await repository.findByEmail(email)

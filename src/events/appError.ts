@@ -30,7 +30,7 @@ function errorHandler (
   const { log, statusCode, message, details } = error
 
   appLog('Error', log ?? message)
-  return error instanceof AppError
+  return error.statusCode !== 500
     ? res.status(statusCode).send({ message, details })
     : res.status(500).send({
       message: 'Internal server error',
