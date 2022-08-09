@@ -15,4 +15,11 @@ authRouter.post(
   controller.registerUser
 )
 
+authRouter.post(
+  '/sign-in',
+  validateSchemaMiddleware(schema.SignIn),
+  middleware.checkUserIsValid,
+  controller.loginUser
+)
+
 export default authRouter

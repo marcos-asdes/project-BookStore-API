@@ -6,7 +6,13 @@ const RegisterUser = Joi.object({
   name: Joi.string().min(3).max(100).required(),
   surname: Joi.string().min(3).max(100).required()
 })
-
 // implement addition of phone number, city and country in RegisterUser
+// implement google sign up
 
-export { RegisterUser }
+const SignIn = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(8).max(30).required()
+})
+// implement google sign in
+
+export { RegisterUser, SignIn }
