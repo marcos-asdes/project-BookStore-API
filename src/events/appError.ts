@@ -3,18 +3,15 @@ import { Request, Response, NextFunction } from 'express'
 import appLog from './appLog.js'
 
 class AppError {
-  log: string
   statusCode: number
   message: string
-  details: string | {} | string[]
+  details: string | object | string[]
 
   constructor (
-    log: string,
     statusCode: number,
     message: string,
-    details: string | {} | string[]
+    details: string | object | string[]
   ) {
-    this.log = log
     this.statusCode = statusCode
     this.message = message
     this.details = details
@@ -22,14 +19,16 @@ class AppError {
 }
 
 function errorHandler (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any,
   _req: Request,
   res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction
 ) {
-  const { log, statusCode, message, details } = error
+  const { statusCode, message, details } = error
 
-  appLog('Error', log ?? message)
+  appLog('Error', message)
   return error.statusCode !== 500
     ? res.status(statusCode).send({ message, details })
     : res.status(500).send({

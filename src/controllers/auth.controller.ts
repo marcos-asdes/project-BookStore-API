@@ -1,27 +1,38 @@
 import { Request, Response } from 'express'
 
-import AppLog from '../events/AppLog.js'
-
-import * as repository from '../repositories/auth.repository.js'
-import * as service from '../services/auth.service.js'
+import appLog from '../events/appLog.js'
+import { authService } from '../services/auth.service.js'
+import { SignIn, SignUp } from '../types/user.d.js'
 
 async function registerUser (_req: Request, res: Response) {
-  const body = res.locals.body
-  const password = service.hashPassword(body.password)
-
-  const data = { ...body, password }
-  await repository.registerUser(data)
-
-  AppLog('Controller', 'User signed up')
+  const body: SignUp = res.locals.body
+  const { email, password, name, surname } = body
+  // checks if the email entered for registration is already in the database
+  await authService.checkIfEmailIsAlreadyRegistered(email)
+  // encrypt the password
+  const encryptedPassword = authService.encryptPassword(password)
+  // creates the data object to be stored in the database
+  const data = { 
+    email: email,
+    password: encryptedPassword,
+    name: name,
+    surname: surname
+  }
+  // stores the data object in the database
+  await authService.registerUser(data)
+  appLog('Controller', 'User signed up')
   return res.sendStatus(201)
 }
 
-function loginUser (_req: Request, res: Response) {
-  const { user: { id } } = res.locals
+async function loginUser (_req: Request, res: Response) {
+  const body: SignIn = res.locals.body
+  const { email, password } = body
 
-  const token = service.generateToken(id)
+  const id = await authService.checkIfUserIsValid(email, password)
 
-  AppLog('Controller', 'User signed in')
+  const token = authService.generateToken(id)
+
+  appLog('Controller', 'User signed in')
   return res.status(200).send({ token })
 }
 

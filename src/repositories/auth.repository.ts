@@ -1,16 +1,20 @@
 import client from '../config/database.js'
-import AppLog from '../events/AppLog.js'
+import appLog from '../events/appLog.js'
+import { SignUp } from '../types/user.js'
 
-async function findByEmail (email: string) {
-  AppLog('Repository', 'User searched by email')
-
-  return await client.user.findUnique({ where: { email } })
+async function findUserByEmail (email: string) {
+  const user = await client.user.findUnique({ where: { email } })
+  appLog('Repository', 'Performed user search by e-mail')
+  return user
 }
 
-async function registerUser (data: any) {
+async function registerUser (data: SignUp) {
   await client.user.create({ data })
 
-  return AppLog('Repository', 'User instance inserted')
+  return appLog('Repository', 'User instance inserted')
 }
 
-export { findByEmail, registerUser }
+export const authRepository = {
+  findUserByEmail, 
+  registerUser
+}

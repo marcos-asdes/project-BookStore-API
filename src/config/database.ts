@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import dotenv from 'dotenv'
 
-import AppLog from '../events/AppLog.js'
+import appLog from '../events/appLog.js'
 
 dotenv.config()
 
@@ -11,9 +11,9 @@ connectToDatabase()
 async function connectToDatabase () {
   try {
     await client.$connect()
-    AppLog('Server', 'Connected to database')
+    appLog('Server', 'Connected to database')
   } catch (error) {
-    AppLog('Error', `${error}`)
+    appLog('Error', `${error}`)
   }
 }
 

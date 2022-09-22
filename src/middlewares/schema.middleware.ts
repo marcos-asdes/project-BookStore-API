@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { ObjectSchema } from 'joi'
 
-import { AppError } from '../events/AppError.js'
-import appLog from '../events/AppLog.js'
+import { AppError } from '../events/appError.js'
+import appLog from '../events/appLog.js'
 
 export function validateSchemaMiddleware (schema: ObjectSchema) {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -11,7 +11,6 @@ export function validateSchemaMiddleware (schema: ObjectSchema) {
 
     if (error) {
       throw new AppError(
-        'Invalid input',
         422,
         'Invalid input',
         error.details.map((e) => e.message).join(', ')
