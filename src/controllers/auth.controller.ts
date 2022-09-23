@@ -28,8 +28,13 @@ async function loginUser (_req: Request, res: Response) {
   const body: SignIn = res.locals.body
   const { email, password } = body
 
-  const id = await authService.checkIfUserIsValid(email, password)
+  const data = await authService.checkIfUserAlreadyExists(email)
+  const { id } = data
+  const encryptedPassword = data.password
 
+  const decryptedPassword = authService.decryptPassword(encryptedPassword)
+  authService.comparePasswords(password, decryptedPassword)
+  
   const token = authService.generateToken(id)
 
   appLog('Controller', 'User signed in')

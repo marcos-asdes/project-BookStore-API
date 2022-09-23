@@ -17,26 +17,20 @@ async function checkIfEmailIsAlreadyRegistered (email: string) {
   return appLog('Service', 'Email is unique')
 }
 
+function encryptPassword(password: string) {
+  return userUtils.encryptPassword(password)
+}
+
 async function registerUser (data: SignUp) {
   await authRepository.registerUser(data)
   return appLog('Service', '...')
 }
 
 // sign in services
-async function checkIfUserIsValid (email: string, password: string) {
-
-  const userId = await checkIfUserAlreadyExists(email)
-
-  const decryptedPassword = userUtils.decryptPassword(password)
-  comparePasswords(password, decryptedPassword)
-
-  return userId
-}
-
 async function checkIfUserAlreadyExists (email: string) {
-  const userAlreadyExists = await authRepository.findUserByEmail(email)
+  const data = await authRepository.findUserByEmail(email)
   // TESTAR CONDICIONAL
-  if (!userAlreadyExists) {
+  if (!data) {
     throw new AppError(
       404,
       'User not found',
@@ -44,7 +38,11 @@ async function checkIfUserAlreadyExists (email: string) {
     )
   }
   appLog('Middleware', 'User exists')
-  return userAlreadyExists.id
+  return data
+}
+
+function decryptPassword(password: string) {
+  return userUtils.decryptPassword(password)
 }
 
 function comparePasswords (password: string, decryptedPassword: string) {
@@ -62,14 +60,12 @@ function generateToken (id: number) {
   return userUtils.generateToken(id)
 }
 
-function encryptPassword(password: string) {
-  return userUtils.encryptPassword(password)
-}
-
 export const authService = {
   checkIfEmailIsAlreadyRegistered,
   encryptPassword,
   registerUser,
-  checkIfUserIsValid,
+  checkIfUserAlreadyExists,
+  decryptPassword,
+  comparePasswords,
   generateToken
 }
