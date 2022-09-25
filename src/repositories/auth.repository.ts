@@ -1,6 +1,6 @@
 import client from '../config/database.js'
 import appLog from '../events/appLog.js'
-import { SignUp } from '../types/user.js'
+import { SignUp } from '../types/user.d.js'
 
 async function findUserByEmail (email: string) {
   const user = await client.user.findUnique({ where: { email } })
@@ -10,7 +10,6 @@ async function findUserByEmail (email: string) {
 
 async function registerUser (data: SignUp) {
   await client.user.create({ data })
-
   return appLog('Repository', 'User instance inserted')
 }
 

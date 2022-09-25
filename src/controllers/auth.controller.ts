@@ -30,10 +30,10 @@ async function loginUser (_req: Request, res: Response) {
 
   const data = await authService.checkIfUserAlreadyExists(email)
   const { id } = data
-  const encryptedPassword = data.password
+  const databasePassword = data.password
+  const inputedPassword = password
 
-  const decryptedPassword = authService.decryptPassword(encryptedPassword)
-  authService.comparePasswords(password, decryptedPassword)
+  authService.comparePasswords(inputedPassword, databasePassword)
   
   const token = authService.generateToken(id)
 

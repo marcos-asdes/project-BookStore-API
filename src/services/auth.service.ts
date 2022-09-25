@@ -2,7 +2,7 @@ import appLog from '../events/appLog.js'
 import { AppError } from '../events/appError.js'
 import { authRepository } from '../repositories/auth.repository.js'
 import { SignUp } from '../types/user.d.js'
-import { userUtils } from '../utils/user.js'
+import { userSecurityService } from './userSecurity.service.js'
 
 // sign up services
 async function checkIfEmailIsAlreadyRegistered (email: string) {
@@ -18,7 +18,7 @@ async function checkIfEmailIsAlreadyRegistered (email: string) {
 }
 
 function encryptPassword(password: string) {
-  return userUtils.encryptPassword(password)
+  return userSecurityService.encryptPassword(password)
 }
 
 async function registerUser (data: SignUp) {
@@ -41,14 +41,11 @@ async function checkIfUserAlreadyExists (email: string) {
   return data
 }
 
-function decryptPassword(password: string) {
-  return userUtils.decryptPassword(password)
-}
-
-function comparePasswords (password: string, decryptedPassword: string) {
-  if (password !== decryptedPassword) {
+function comparePasswords(inputedPassword: string, databasePassword: string) {
+  const passwordIsValid = userSecurityService.comparePasswords(inputedPassword, databasePassword)
+  if (!passwordIsValid) {
     throw new AppError(
-      403,
+      401,
       'Invalid password',
       'Ensure to provide a valid password'
     )
@@ -57,7 +54,7 @@ function comparePasswords (password: string, decryptedPassword: string) {
 }
 
 function generateToken (id: number) {
-  return userUtils.generateToken(id)
+  return userSecurityService.generateToken(id)
 }
 
 export const authService = {
@@ -65,7 +62,6 @@ export const authService = {
   encryptPassword,
   registerUser,
   checkIfUserAlreadyExists,
-  decryptPassword,
   comparePasswords,
   generateToken
 }
