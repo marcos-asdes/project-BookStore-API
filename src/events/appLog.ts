@@ -5,6 +5,7 @@ interface Logs {
 }
 
 type LogTypes =
+  | 'Route'
   | 'Middleware'
   | 'Controller'
   | 'Repository'
@@ -12,9 +13,10 @@ type LogTypes =
   | 'Service'
   | 'Util'
   | 'Error'
-;
+  ;
 
 const types: Logs = {
+  Route: 'white',
   Middleware: 'magenta',
   Controller: 'green',
   Repository: 'blue',
@@ -27,7 +29,7 @@ const types: Logs = {
 const appLog = (type: LogTypes, text: string) => {
   console.log(
     chalk.bold[
-      types[type] as 'green' | 'magenta' | 'blue' | 'yellow' | 'cyan' | 'red'
+      types[type] as 'white' | 'green' | 'magenta' | 'blue' | 'yellow' | 'cyan' | 'red'
     ](`[${type}] ${text}`)
   )
 }

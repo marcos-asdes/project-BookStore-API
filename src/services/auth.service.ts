@@ -5,7 +5,7 @@ import { SignUp } from '../types/user.d.js'
 import { userSecurityService } from './userSecurity.service.js'
 
 // sign up services
-async function checkIfEmailIsAlreadyRegistered (email: string) {
+async function checkIfEmailIsAlreadyRegistered(email: string) {
   const data = await authRepository.findUserByEmail(email)
   if (data) {
     throw new AppError(
@@ -21,13 +21,13 @@ function encryptPassword(password: string) {
   return userSecurityService.encryptPassword(password)
 }
 
-async function registerUser (data: SignUp) {
+async function registerUser(data: SignUp) {
   await authRepository.registerUser(data)
-  return appLog('Service', '...')
+  return appLog('Service', 'User created')
 }
 
 // sign in services
-async function checkIfUserAlreadyExists (email: string) {
+async function checkIfUserAlreadyExists(email: string) {
   const data = await authRepository.findUserByEmail(email)
   // TESTAR CONDICIONAL
   if (!data) {
@@ -53,7 +53,7 @@ function comparePasswords(inputedPassword: string, databasePassword: string) {
   return appLog('Service', 'Valid password')
 }
 
-function generateToken (id: number) {
+function generateToken(id: number) {
   return userSecurityService.generateToken(id)
 }
 
