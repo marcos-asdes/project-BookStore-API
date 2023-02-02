@@ -4,19 +4,20 @@ import appLog from '../events/appLog.js'
 import { authService } from '../services/auth.service.js'
 import { SignIn, SignUp } from '../types/user.d.js'
 
-async function registerUser (_req: Request, res: Response) {
+async function registerUser(_req: Request, res: Response) {
   const body: SignUp = res.locals.body
-  const { email, password, name, surname } = body
+  const { email, password, name, surname, phone } = body
   // checks if the email entered for registration is already in the database
   await authService.checkIfEmailIsAlreadyRegistered(email)
   // encrypt the password
   const encryptedPassword = authService.encryptPassword(password)
   // creates the data object to be stored in the database
-  const data = { 
+  const data = {
     email: email,
     password: encryptedPassword,
     name: name,
-    surname: surname
+    surname: surname,
+    phone: phone
   }
   // stores the data object in the database
   await authService.registerUser(data)
@@ -24,7 +25,7 @@ async function registerUser (_req: Request, res: Response) {
   return res.sendStatus(201)
 }
 
-async function loginUser (_req: Request, res: Response) {
+async function loginUser(_req: Request, res: Response) {
   const body: SignIn = res.locals.body
   const { email, password } = body
 
@@ -34,7 +35,7 @@ async function loginUser (_req: Request, res: Response) {
   const inputedPassword = password
 
   authService.comparePasswords(inputedPassword, databasePassword)
-  
+
   const token = authService.generateToken(id)
 
   appLog('Controller', 'User signed in')
