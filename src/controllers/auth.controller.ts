@@ -30,7 +30,8 @@ async function loginUser(_req: Request, res: Response) {
   const { email, password } = body
 
   const data = await authService.checkIfUserAlreadyExists(email)
-  const { id } = data
+  const { id, name, surname } = data
+
   const databasePassword = data.password
   const inputedPassword = password
 
@@ -38,8 +39,19 @@ async function loginUser(_req: Request, res: Response) {
 
   const token = authService.generateToken(id)
 
+  const userName = name
+  const userFullName = name + ' ' + surname
+
+  const userData = {
+    'user': {
+      'name': userName,
+      'full_name': userFullName
+    },
+    'token': token
+  }
+
   appLog('Controller', 'User signed in')
-  return res.status(200).send({ token })
+  return res.status(200).send(userData)
 }
 
 export { registerUser, loginUser }

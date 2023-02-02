@@ -29,7 +29,6 @@ async function registerUser(data: SignUp) {
 // sign in services
 async function checkIfUserAlreadyExists(email: string) {
   const data = await authRepository.findUserByEmail(email)
-  // TESTAR CONDICIONAL
   if (!data) {
     throw new AppError(
       404,
