@@ -21,3 +21,59 @@ model User {
 
   @@map("users")
 }
+
+model Book {
+  id             Int              @id @default(autoincrement())
+  goodle_id      String           @unique
+  title          String
+  publisher      String
+  published_date DateTime
+  description    String
+  page_count     Int
+  image_link     String[]
+  language       String
+  preview_link   String
+  country        String
+  seability      Sale
+  isEbook        Boolean
+  amount         Decimal?
+  currency_code  String?
+  text_snippet   String
+  categories     BookCategories[]
+  authors        BookAuthors[]
+}
+
+enum Sale {
+  NOT_FOR_SALE
+  FOR_SALE
+}
+
+model Category {
+  id    Int              @id @default(autoincrement())
+  name  String
+  books BookCategories[]
+}
+
+model Author {
+  id    Int           @id @default(autoincrement())
+  name  String
+  books BookAuthors[]
+}
+
+model BookCategories {
+  book        Book     @relation(fields: [book_id], references: [id])
+  book_id     Int
+  category    Category @relation(fields: [category_id], references: [id])
+  category_id Int
+
+  @@id([book_id, category_id])
+}
+
+model BookAuthors {
+  book      Book   @relation(fields: [book_id], references: [id])
+  book_id   Int
+  author    Author @relation(fields: [author_id], references: [id])
+  author_id Int
+
+  @@id([book_id, author_id])
+}
