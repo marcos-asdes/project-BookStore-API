@@ -11,32 +11,29 @@ async function bookshelf() {
     client.$executeRaw`TRUNCATE books RESTART IDENTITY CASCADE`,
   ])
 
-  const arrayTest = ['Harry+Potter', 'Sapiens', 'Javascript', 'Typescript', 'Excel', 'John+Green', 'Colleen+Hoover', 'Java', 'CSharp', 'DotNet', 'Python', 'Holmes']
-
+  const arrayTest = ['Harry+Potter', 'Sapiens', 'Javascript', 'Typescript', 'Excel', 'John+Green', 'Colleen+Hoover', 'Java', 'CSharp', 'DotNet', 'Python', 'Holmes', '.NET']
+  const arrayGoogleId: string[] = []
   for (let i = 0; i < arrayTest.length; i++) {
     const googleBooksAPI = `https://www.googleapis.com/books/v1/volumes?q=${arrayTest[i]}&key=${process.env.API_KEY}`
     axios.get(googleBooksAPI).then(async (res) => {
-      let totalItems = res.data.totalItems;
-      /*       
-      if (totalItems >= 50) {
-        totalItems = 50
-      } */
+      let totalItems = res.data.items.length
 
       for (let j = 0; j < totalItems; j++) {
+        const googleId: string = res.data.items[j].id
 
-        if (!res.data.items[j] || !res.data.items[j].id || !res.data.items[j].volumeInfo) {
-          break
+        const googleIdIsDuplicated: string | undefined = arrayGoogleId.find((e: string) => e === googleId)
+        if (googleIdIsDuplicated) {
+          continue
         }
+        arrayGoogleId.push(googleId)
 
         const selectedItem = res.data.items[j]
         const volumeData = selectedItem.volumeInfo
         const saleData = selectedItem.saleInfo
         const searchData = selectedItem.searchInfo
 
-        console.log(selectedItem.id)
-
         const auxObject: BookT = {
-          goodle_id: '',
+          google_id: '',
           title: '',
           publisher: null,
           published_date: null,
@@ -52,7 +49,7 @@ async function bookshelf() {
           text_snippet: null
         }
 
-        auxObject.goodle_id = selectedItem.id
+        auxObject.google_id = googleId
         auxObject.title = volumeData.title
 
         if (volumeData.publisher) {
@@ -106,6 +103,7 @@ async function bookshelf() {
       }
     })
   }
+
 }
 
 bookshelf()
