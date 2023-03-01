@@ -2,13 +2,13 @@
   "name": "project-bookstore-api",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/server.js",
+  "main": "dist/src/server.js",
   "type": "module",
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "tsc -p tsconfig.json & node dist/src/server.js",
     "ts:start": "ts-node src/server.ts",
     "build": "tsc -p tsconfig.json",
     "dev": "nodemon src/server.ts",
