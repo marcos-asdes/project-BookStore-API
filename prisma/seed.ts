@@ -1,18 +1,23 @@
 import axios from 'axios';
 
 import client from '../src/config/database.js';
-//import appLog from '../src/events/appLog.js';
 
-import { BookT } from '../src/types/book.js';
+import { TBook } from '../src/types/book.js';
+import { Author, Category } from "@prisma/client";
 
 async function bookshelf() {
 
   await client.$transaction([
     client.$executeRaw`TRUNCATE books RESTART IDENTITY CASCADE`,
+    client.$executeRaw`TRUNCATE authors RESTART IDENTITY CASCADE`,
+    client.$executeRaw`TRUNCATE categories RESTART IDENTITY CASCADE`
   ])
 
   const arrayTest = ['Harry+Potter', 'Sapiens', 'Javascript', 'Typescript', 'Excel', 'John+Green', 'Colleen+Hoover', 'Java', 'CSharp', 'DotNet', 'Python', 'Holmes', '.NET']
   const arrayGoogleId: string[] = []
+  const arrayAuthors: string[] = []
+  const arrayCategories: string[] = []
+
   for (let i = 0; i < arrayTest.length; i++) {
     const googleBooksAPI = `https://www.googleapis.com/books/v1/volumes?q=${arrayTest[i]}&key=${process.env.API_KEY}`
     axios.get(googleBooksAPI).then(async (res) => {
@@ -32,7 +37,8 @@ async function bookshelf() {
         const saleData = selectedItem.saleInfo
         const searchData = selectedItem.searchInfo
 
-        const auxObject: BookT = {
+        // book data
+        const auxObject: TBook = {
           google_id: '',
           title: '',
           publisher: null,
@@ -97,13 +103,92 @@ async function bookshelf() {
           auxObject.text_snippet = searchData.textSnippet
         }
 
-        await client.book.create({
+        const book = await client.book.create({
           data: auxObject
         })
+
+        // authors data
+        if (volumeData.authors && volumeData.authors.length > 0) {
+          for (let k = 0; k < volumeData.authors.length; k++) {
+            let authorAlreadyRegistered: Author
+            const authorName: string = volumeData.authors[k]
+            const authorIsDuplicated: string | undefined = arrayAuthors.find((e: string) => e === authorName)
+
+            if (authorIsDuplicated) {
+              authorAlreadyRegistered = await client.author.findUnique({
+                where: {
+                  name: authorName
+                }
+              })
+            } else {
+              arrayAuthors.push(authorName)
+            }
+
+            if (!authorAlreadyRegistered) {
+              const author = await client.author.create({
+                data: {
+                  name: authorName
+                }
+              })
+              await client.bookAuthors.create({
+                data: {
+                  book_id: book.id,
+                  author_id: author.id
+                }
+              })
+            } else {
+              await client.bookAuthors.create({
+                data: {
+                  book_id: book.id,
+                  author_id: authorAlreadyRegistered.id
+                }
+              })
+            }
+          }
+        }
+
+        // categories data
+        if (volumeData.categories && volumeData.categories.length > 0) {
+          for (let k = 0; k < volumeData.categories.length; k++) {
+            let categoryAlreadyRegistered: Category
+            const categoryName: string = volumeData.categories[k]
+            const categoryIsDuplicated: string | undefined = arrayCategories.find((e: string) => e === categoryName)
+
+            if (categoryIsDuplicated) {
+              categoryAlreadyRegistered = await client.category.findUnique({
+                where: {
+                  name: categoryName
+                }
+              })
+            } else {
+              arrayCategories.push(categoryName)
+            }
+
+            if (!categoryAlreadyRegistered) {
+              const category = await client.category.create({
+                data: {
+                  name: categoryName
+                }
+              })
+              await client.bookCategories.create({
+                data: {
+                  book_id: book.id,
+                  category_id: category.id
+                }
+              })
+            } else {
+              await client.bookCategories.create({
+                data: {
+                  book_id: book.id,
+                  category_id: categoryAlreadyRegistered.id
+                }
+              })
+            }
+          }
+        }
       }
     })
   }
-
 }
 
 bookshelf()

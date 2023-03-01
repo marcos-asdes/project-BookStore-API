@@ -1,3 +1,3 @@
 import { Book } from "@prisma/client";
 
-export type BookT = Omit<Book, 'id'>
+export type TBook = Omit<Book, 'id'>

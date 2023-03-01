@@ -14,6 +14,7 @@
     "dev": "nodemon src/server.ts",
     "migrate": "npx prisma migrate dev",
     "studio": "npx prisma studio",
+    "seed": "npx prisma db seed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
