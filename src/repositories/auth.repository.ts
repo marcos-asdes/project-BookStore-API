@@ -1,6 +1,8 @@
 import client from '../config/database.js'
-import appLog from '../events/appLog.js'
+
 import { SignUp } from '../types/user.d.js'
+
+import appLog from '../events/appLog.js'
 
 async function findUserByEmail(email: string) {
   const user = await client.user.findUnique({ where: { email } })

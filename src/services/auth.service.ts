@@ -1,8 +1,11 @@
+import { userSecurityService } from './userSecurity.service.js'
+
+import { authRepository } from '../repositories/auth.repository.js'
+
+import { SignUp } from '../types/user.d.js'
+
 import appLog from '../events/appLog.js'
 import { AppError } from '../events/appError.js'
-import { authRepository } from '../repositories/auth.repository.js'
-import { SignUp } from '../types/user.d.js'
-import { userSecurityService } from './userSecurity.service.js'
 
 // sign up services
 async function checkIfEmailIsAlreadyRegistered(email: string) {
@@ -36,7 +39,7 @@ async function checkIfUserAlreadyExists(email: string) {
       'Ensure to provide a valid email address'
     )
   }
-  appLog('Middleware', 'User exists')
+  appLog('Service', 'User exists')
   return data
 }
 

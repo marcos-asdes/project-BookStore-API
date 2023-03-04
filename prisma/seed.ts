@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 
 import client from '../src/config/database.js';
@@ -14,7 +15,7 @@ async function bookshelf() {
     await axios.get(googleBooksAPI).then(async (res) => {
       const books: any = res.data.items
 
-      for (let book of books) {
+      for (const book of books) {
         const googleId: string = book.id
 
         const bookAlreadyRegistered = await checkIfBookIsAlreadyRegistered(googleId)
@@ -28,7 +29,7 @@ async function bookshelf() {
         if (book.volumeInfo && book.volumeInfo.authors && book.volumeInfo.authors.length > 0) {
           const authors: any = book.volumeInfo.authors
 
-          for (let author of authors) {
+          for (const author of authors) {
             const authorAlreadyRegistered = await checkIfAuthorIsAlreadyRegistered(author)
 
             if (authorAlreadyRegistered) {
@@ -44,7 +45,7 @@ async function bookshelf() {
         if (book.volumeInfo && book.volumeInfo.categories && book.volumeInfo.categories.length > 0) {
           const categories: any = book.volumeInfo.categories
 
-          for (let category of categories) {
+          for (const category of categories) {
             const categoryAlreadyRegistered = await checkIfCategoryIsAlreadyRegistered(category)
 
             if (categoryAlreadyRegistered) {
