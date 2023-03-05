@@ -28,12 +28,31 @@ async function filterBooks() {
               language: 'en',
             }
           ]
+        },
+        {
+          NOT: [
+            {
+              amount: null,
+            }
+          ]
         }
       ]
+    },
+    include: {
+      authors: {
+        include: {
+          author: true
+        }
+      },
+      categories: {
+        include: {
+          category: true
+        }
+      }
     }
   })
 
-  appLog('Repository', 'Book search performed by language and saleability')
+  appLog('Repository', 'Catalog searched in the database')
   return catalog
 }
 

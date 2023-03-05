@@ -23,7 +23,7 @@
     "url": "git+https://github.com/marcos-asdes/project-BookStore-API.git"
   },
   "author": "Marcos Antonio",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/marcos-asdes/project-BookStore-API/issues"
   },
