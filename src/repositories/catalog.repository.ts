@@ -7,14 +7,7 @@ async function filterBooks() {
     where: {
       AND: [
         {
-          OR: [
-            {
-              saleability: 'FOR_SALE',
-            },
-            {
-              saleability: 'FREE',
-            }
-          ]
+          saleability: 'FOR_SALE',
         },
         {
           OR: [
@@ -41,12 +34,20 @@ async function filterBooks() {
     include: {
       authors: {
         include: {
-          author: true
+          author: {
+            select: {
+              name: true
+            }
+          }
         }
       },
       categories: {
         include: {
-          category: true
+          category: {
+            select: {
+              name: true
+            }
+          }
         }
       }
     }
