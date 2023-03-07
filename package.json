@@ -15,7 +15,7 @@
     "migrate": "npx prisma migrate dev",
     "studio": "npx prisma studio",
     "seed": "npx prisma db seed",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "check-updates": "npx npm-check-updates -u"
   },
   "repository": {
@@ -58,6 +58,7 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-promise": "^6.1.1",
+    "jest": "^29.5.0",
     "nodemon": "^2.0.21",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
