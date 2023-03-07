@@ -4,9 +4,9 @@
 		"module": "es6",
 		"moduleResolution": "node",
 		"outDir": "dist",
-		"noImplicitAny": true,
+		"noImplicitAny": true
 	},
 	"ts-node": {
 		"esm": true
-	}
+	},
 }
