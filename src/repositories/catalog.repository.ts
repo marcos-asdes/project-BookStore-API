@@ -57,6 +57,13 @@ async function filterBooks() {
   return catalog
 }
 
+async function checkIfDatabaseisEmpty() {
+  const isEmpty = await client.book.count()
+  appLog('Repository', 'Completed database check')
+  return isEmpty
+}
+
 export const catalogRepository = {
-  filterBooks
+  filterBooks,
+  checkIfDatabaseisEmpty
 }

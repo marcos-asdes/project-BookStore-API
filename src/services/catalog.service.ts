@@ -3,6 +3,19 @@ import { catalogRepository } from '../repositories/catalog.repository.js'
 import appLog from '../events/appLog.js'
 import { AppError } from '../events/appError.js'
 
+import { bookshelf } from '../../prisma/seed.js'
+
+async function checkIfDatabaseExists() {
+  const isEmpty = await catalogRepository.checkIfDatabaseisEmpty()
+
+  if (isEmpty === 0) {
+    await bookshelf()
+    appLog('Service', 'Database populated')
+  }
+
+  appLog('Service', 'Database checked')
+}
+
 async function filterCatalog() {
   const data = await catalogRepository.filterBooks()
   if (!data) {
@@ -17,5 +30,6 @@ async function filterCatalog() {
 }
 
 export const catalogService = {
+  checkIfDatabaseExists,
   filterCatalog
 }

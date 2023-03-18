@@ -5,7 +5,7 @@ import client from '../src/config/database.js';
 
 import { TBook } from '../src/types/book.js';
 
-async function bookshelf(): Promise<void> {
+export async function bookshelf(): Promise<void> {
   const arraySeed: string[] = ['Sapiens', 'Yuval', 'Harari', '.NET', 'dotNet', 'CSharp', 'JavaScript', 'Java', 'Typescript', 'Programação']
 
   await resetDatabase()

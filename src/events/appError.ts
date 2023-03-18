@@ -5,12 +5,12 @@ import appLog from './appLog.js'
 class AppError {
   statusCode: number
   message: string
-  details: string | object | string[]
+  details: string | object | string[] | unknown
 
-  constructor (
+  constructor(
     statusCode: number,
     message: string,
-    details: string | object | string[]
+    details: string | object | string[] | unknown
   ) {
     this.statusCode = statusCode
     this.message = message
@@ -18,7 +18,7 @@ class AppError {
   }
 }
 
-function errorHandler (
+function errorHandler(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any,
   _req: Request,
