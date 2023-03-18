@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "Saleability" ADD VALUE 'FOR_SALE_AND_RENTAL';
