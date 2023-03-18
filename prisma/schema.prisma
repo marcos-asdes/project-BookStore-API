@@ -48,6 +48,7 @@ enum Saleability {
   FOR_SALE
   NOT_FOR_SALE
   FREE
+  FOR_SALE_AND_RENTAL
 }
 
 model Category {
